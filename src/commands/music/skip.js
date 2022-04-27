@@ -12,6 +12,6 @@ module.exports = class SkipCommand extends Command {
   async execute(interaction) {
       const queue = await this.client.player.getQueue(interaction.channel.guildId);
       await queue.skip();
-      await interaction.reply({content: ":notes: Skipped ...", ephemeral: true});
+      await interaction.reply({content: ":next_track: Skipped ...", ephemeral: true});
     }
 }

@@ -12,6 +12,6 @@ module.exports = class StopCommand extends Command {
   async execute(interaction) {
       const queue = await this.client.player.getQueue(interaction.channel.guildId);
       await queue.stop();
-      await interaction.reply({content: ":notes: Stopped the queue and disconnected."});
+      await interaction.reply({content: ":stop_button: Stopped the queue and disconnected."});
     }
 }
