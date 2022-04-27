@@ -1,8 +1,9 @@
 const { ShewenyClient } = require("sheweny");
+const { Player } = require("discord-music-player");
 const config = require("../config");
 
 const client = new ShewenyClient({
-  intents: ["GUILDS", "GUILD_MESSAGES"],
+  intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_VOICE_STATES"],
   admins: ["259741670323650571"],
   managers: {
     commands: {
@@ -27,4 +28,10 @@ const client = new ShewenyClient({
   mode : "development", // Change to production for production bot
 });
 
+client.player = new Player(client, {
+  leaveOnEmpty: false,
+});
 client.login(config.DISCORD_TOKEN);
+
+
+
