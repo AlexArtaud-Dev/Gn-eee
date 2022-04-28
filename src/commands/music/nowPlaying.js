@@ -24,10 +24,10 @@ module.exports = class NowPlayingCommand extends Command {
         .setURL(song.url)
         .setThumbnail(song.thumbnail)
         .setColor("#ff0000")
-        .setDescription(`Musique demandée par <@${author.id}>`)
-        .addField("Durée", song.duration, true)
-        .addField("Statut", song.isLive ? "En Live" : "Vidéo", true)
-        .addField("File d'attente", song.queue.songs.length.toString(), true);
+        .setDescription(`Music asked by <@${author.id}>`)
+        .addField("Duration", song.duration, true)
+        .addField("Status", song.isLive ? "Live" : "Video", true)
+        .addField("Queue length", song.queue.songs.length.toString(), true);
       return musicEmbed;
   }
 }

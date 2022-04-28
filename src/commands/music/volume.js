@@ -12,7 +12,8 @@ module.exports = class VolumeCommand extends Command {
                     name: "rate",
                     description: "Rate at which to change the volume. Must be between 0 and 100.",
                     type: "STRING",
-                }],
+                }
+            ],
         });
     }
 

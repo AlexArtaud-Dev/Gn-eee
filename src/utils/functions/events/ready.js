@@ -1,3 +1,6 @@
+const {MessageEmbed} = require("discord.js");
+const moment = require("moment");
+
 function displayBotInfos (client) {
     let information = getBotInformations(client);
     console.log("═════════════════ Watching ═════════════════");
@@ -28,7 +31,8 @@ function setMusicPlayerEvents(player){
         queue.data.messageChannel.send(`:notes: **${newSong.name}** Added to the queue (\`${newSong.duration}\`)!`)
     });
     player.on('playlistAdd',  (queue, playlist) => {
-        queue.data.messageChannel.send(`:notes: Playlist ${playlist} was added to the queue (${playlist.songs.length} songs)!`)
+        const embed = getPlaylistEmbed(playlist, queue.data.author);
+        queue.data.messageChannel.send({embeds: [embed]});
     });
     player.on('queueDestroyed',  (queue) => {
         queue.data.messageChannel.send(`:notes: The player has stopped and the queue has been cleared.`)
@@ -45,6 +49,47 @@ function setMusicPlayerEvents(player){
     player.on('error', (error, queue) => {
         queue.data.messageChannel.send(`:notes: An error occured : ${error.message}`);
     });
+}
+
+function getPlaylistEmbed(playlist, author){
+    let playlistEmbed = new MessageEmbed();
+    playlistEmbed.setTitle(playlist.name)
+      .setURL(playlist.url)
+      .setThumbnail(playlist.songs[0].thumbnail)
+      .setColor("#ff0000")
+      .setDescription(`Playlist asked by <@${author.id}>`)
+      .addField("Playlist Duration", getPlaylistDuration(playlist), true)
+      .addField("Queue length", playlist.songs.length.toString(), true);
+    return playlistEmbed;
+}
+
+function getPlaylistDuration(playlist){
+    let h = 0;
+    let m = 0;
+    let s = 0;
+    playlist.songs.forEach(song => {
+        const time = song.duration.split(":");
+        if (time.length === 3) {
+            h += parseInt(time[0]);
+            m += parseInt(time[1]);
+            s += parseInt(time[2]);
+        }
+        if (time.length === 2) {
+            m += parseInt(time[0]);
+            s += parseInt(time[1]);
+        }
+        if (time.length === 1) {
+            s += parseInt(time[0]);
+        }
+    });
+    const secQuotient = Math.floor(s / 60);
+    m = m + secQuotient;
+    s = s%60;
+    const minQuotient = Math.floor(m / 60);
+    h = h + minQuotient;
+    m = m%60;
+
+    return `${h}:${m}:${s}`;
 }
 
 module.exports = {

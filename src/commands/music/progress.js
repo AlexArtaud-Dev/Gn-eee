@@ -11,7 +11,10 @@ module.exports = class ProgressCommand extends Command {
     }
 
     async execute(interaction) {
-        // TODO - Create a progress bar command.
+        const queue = this.client.player.getQueue(interaction.channel.guildId);
+        if (!queue) return interaction.reply({content: "There is no music currently playing.", ephemeral: true});
+        const progressBar = queue.createProgressBar({size: 50});
+        interaction.reply(`:notes: **Progression de la musique: ** ${progressBar.prettier}`)
     }
 
 }
