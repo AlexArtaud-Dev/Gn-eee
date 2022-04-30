@@ -25,7 +25,7 @@ const client = new ShewenyClient({
       directory: "./inhibitors",
     },
   },
-  mode : "development", // Change to production for production bot
+  mode : "production", // Change to production for production bot
 });
 
 client.player = new Player(client, {

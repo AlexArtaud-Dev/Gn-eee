@@ -1,0 +1,26 @@
+{
+  "name": "GNéééee",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node ./src/index.js",
+    "dev": "nodemon ./src/index.js"
+  },
+  "dependencies": {
+    "@discordjs/opus": "^0.5.3",
+    "@discordjs/voice": "*",
+    "canvas": "^2.9.0",
+    "discord-music-player": "^8.3.2",
+    "discord.js": "^13.0.0",
+    "moment": "^2.29.3",
+    "sheweny": "^3.0.0",
+    "ts": "^0.2.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
