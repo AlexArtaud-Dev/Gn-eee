@@ -32,7 +32,9 @@ module.exports = class PlaylistCommand extends Command {
         await queue.join(interaction.member.voice.channel);
         await interaction.reply({content: ":notes: Searching the music ...", ephemeral: true});
         await queue.playlist(url).then(async () => {
-            await interaction.delete();
+            if (interaction !== null){
+                await interaction.delete();
+            }
         }).catch(error => {
             interaction.editReply(`An error as occured : ${error.message}`);
         });
