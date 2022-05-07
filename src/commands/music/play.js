@@ -29,9 +29,9 @@ module.exports = class PlayCommand extends Command {
       await queue.join(interaction.member.voice.channel);
       await interaction.reply({content: ":notes: Searching the music ...", ephemeral: true});
       await queue.play(urlORsearch).then(async () => {
-          if (interaction !== null){
-              await interaction.delete();
-          }
+          // if (interaction !== null){
+          //     await interaction.delete();
+          // }
       }).catch(error => {
         interaction.editReply(`An error as occured : ${error.message}`);
       });
