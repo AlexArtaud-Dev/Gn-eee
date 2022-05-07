@@ -1,4 +1,5 @@
 const { ShewenyClient } = require("sheweny");
+
 const { Player } = require("discord-music-player");
 const config = require("../config");
 
@@ -32,6 +33,8 @@ client.player = new Player(client, {
   leaveOnEmpty: false,
 });
 client.login(config.DISCORD_TOKEN);
+
+API(client)
 
 
 
