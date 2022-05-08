@@ -20,8 +20,6 @@ module.exports = class MusicInhibitor extends Inhibitor {
       }
       const queue = await this.client.player.getQueue(interaction.guildId);
       if (queue){
-        console.log(interaction.member.voice.channel);
-        console.log(queue.data.voiceChannel);
         if (interaction.member.voice.channel !== queue.data.voiceChannel) {
           this.inhibitorMessage = "You must be in the same voice channel as the bot to do that.";
           return false;
