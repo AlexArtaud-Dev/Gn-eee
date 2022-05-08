@@ -15,6 +15,10 @@ const serverCert = fs.readFileSync("./src/API/ssl_cert/server.cert")
 function API(ShewenyClient) {
 
     const app = express();
+    app.use(function(req, res, next) {
+        res.ShewenyClient = ShewenyClient;
+        next();
+    });
     // Swagger Docs Route and Options
     const swaggerDocs = swaggerJsDoc(swaggerOptions);
     app.use("/v1/swagger", swaggerUI.serve, swaggerUI.setup(swaggerDocs));
@@ -27,9 +31,13 @@ function API(ShewenyClient) {
 
     // Import Routes
     const oauthRoute = require('./routes/oauth');
+    const channels = require('./routes/channels');
+    const music = require('./routes/music');
 
     // Route Middlewares
     app.use('/api/auth/discord', oauthRoute);
+    app.use('/api/discord/guild', channels);
+    app.use('/api/discord/music', music);
 
     // Server Listening
     https.createServer({

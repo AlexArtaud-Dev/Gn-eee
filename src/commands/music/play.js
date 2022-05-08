@@ -17,21 +17,31 @@ module.exports = class PlayCommand extends Command {
     });
   }
   async execute(interaction) {
+      let queue;
       const urlORsearch = interaction.options.getString("url");
       if (!urlORsearch) return interaction.reply({content: "Please provide a YouTube URL or search words.", ephemeral: true});
-      const queue = await this.client.player.createQueue(interaction.guildId, {
-        data: {
-          queueInitMessage: interaction,
-          voiceChannel: interaction.member.voice.channel,
-          messageChannel : interaction.channel,
-        }
-      });
+      const existingQueue = await this.client.player.getQueue(interaction.guildId);
+      if (existingQueue && existingQueue.data.isAPICall) {
+          queue = existingQueue;
+          queue.setData({
+              queueInitMessage: interaction,
+              voiceChannel: interaction.member.voice.channel,
+              messageChannel : interaction.channel,
+          })
+      }else{
+          queue = await this.client.player.createQueue(interaction.guildId, {
+              data: {
+                  queueInitMessage: interaction,
+                  voiceChannel: interaction.member.voice.channel,
+                  messageChannel : interaction.channel,
+              }
+          });
+      }
       await queue.join(interaction.member.voice.channel);
       await interaction.reply({content: ":notes: Searching the music ...", ephemeral: true});
+      console.log(queue);
       await queue.play(urlORsearch).then(async () => {
-          // if (interaction !== null){
-          //     await interaction.delete();
-          // }
+          console.log("Playing");
       }).catch(error => {
         interaction.editReply(`An error as occured : ${error.message}`);
       });

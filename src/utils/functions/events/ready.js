@@ -25,29 +25,38 @@ function getBotInformations(client) {
 }
 function setMusicPlayerEvents(player){
     player.on('songAdd',  (queue, song) => {
-        queue.data.messageChannel.send(`:notes: **${song.name}** Added to the queue (\`${song.duration}\`)!`)
+        if (!queue.data.isAPICall)
+            queue.data.messageChannel.send(`:notes: **${song.name}** Added to the queue (\`${song.duration}\`)!`)
     });
     player.on('songChanged', (queue, newSong, oldSong) => {
-        queue.data.messageChannel.send(`:notes: **${newSong.name}** Added to the queue (\`${newSong.duration}\`)!`)
+        if (!queue.data.isAPICall)
+            queue.data.messageChannel.send(`:notes: **${newSong.name}** Added to the queue (\`${newSong.duration}\`)!`)
     });
     player.on('playlistAdd',  (queue, playlist) => {
-        const embed = getPlaylistEmbed(playlist, queue.data.author);
-        queue.data.messageChannel.send({embeds: [embed]});
+        if (!queue.data.isAPICall) {
+            const embed = getPlaylistEmbed(playlist, queue.data.author);
+            queue.data.messageChannel.send({embeds: [embed]});
+        }
     });
     player.on('queueDestroyed',  (queue) => {
-        queue.data.messageChannel.send(`:notes: The player has stopped and the queue has been cleared.`)
+        if (!queue.data.isAPICall)
+            queue.data.messageChannel.send(`:notes: The player has stopped and the queue has been cleared.`)
     });
     player.on('queueEnd',  (queue) => {
-        queue.data.messageChannel.send(`:notes: The queue has ended, disconnecting.`)
+        if (!queue.data.isAPICall)
+            queue.data.messageChannel.send(`:notes: The queue has ended, disconnecting.`)
     });
     player.on('channelEmpty',  (queue) => {
-        queue.data.messageChannel.send(`:notes: Everyone left the Voice Channel, queue ended, disconnecting.`)
+        if (!queue.data.isAPICall)
+            queue.data.messageChannel.send(`:notes: Everyone left the Voice Channel, queue ended, disconnecting.`)
     });
     player.on('clientDisconnect', (queue) => {
-        queue.data.messageChannel.send(`:notes: I was kicked from the Voice Channel, queue ended.`)
+        if (!queue.data.isAPICall)
+            queue.data.messageChannel.send(`:notes: I was kicked from the Voice Channel, queue ended.`)
     });
     player.on('error', (error, queue) => {
-        queue.data.messageChannel.send(`:notes: An error occured : ${error.message}`);
+        if (!queue.data.isAPICall)
+            queue.data.messageChannel.send(`:notes: An error occured : ${error.message}`);
     });
 }
 

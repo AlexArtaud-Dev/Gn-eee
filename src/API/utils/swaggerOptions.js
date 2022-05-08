@@ -11,10 +11,17 @@ const swaggerOptions = {
         basePath: "/api",
         paths : {},
         securityDefinitions: {
-            Bearer: {
+            UserToken : {
                 in: "header",
                 name: "Bearer",
-                description: "This token is needed to use discord api",
+                description: "This token is needed to use user discord api",
+                required: true,
+                type: "apiKey",
+            },
+            Bot: {
+                in: "header",
+                name: "Bot",
+                description: "This token is needed to use bot discord api",
                 required: true,
                 type: "apiKey",
             }
@@ -24,7 +31,13 @@ const swaggerOptions = {
                 name: "Oauth2",
             },
             {
+                name: "Channels",
+            },
+            {
                 name: "Guild",
+            },
+            {
+                name: "Music",
             },
         ],
     },
