@@ -42,20 +42,13 @@ router.get('/:guildID/channels', bot,async(req, res) => {
               }
           }
         )
-
-        const channel = response.data.filter(channel => channel.id === "727870530040102969");
-        const voiceChannel = res.ShewenyClient.guilds.cache.get(guildID).channels.cache.get(channel[0].id);
-        const queue = await res.ShewenyClient.player.createQueue(guildID);
-        queue.setData({ isAPICall: true });
-        await queue.join(voiceChannel);
-        await queue.play("Never gonna give you up");
-
-
         res.status(200).send(response.data);
     } catch (error) {
         res.status(500).send({ error: error.message });
     }
 })
+
+
 
 
 module.exports = router;

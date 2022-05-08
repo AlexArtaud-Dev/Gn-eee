@@ -1,10 +1,97 @@
 const bot = require("./middlewares/bot");
-const axios = require("axios");
-const {DISCORD_API_BASE_URL} = require("../../../config");
-const {Channel, VoiceChannel} = require("discord.js");
+const {VoiceChannel} = require("discord.js");
 const {isVolumeInvalid} = require("./utils");
 const router = require('express').Router();
-const app = require('express')();
+
+/**
+ * @swagger
+ * /discord/music/join/{guildID}/{channelID}:
+ *   post:
+ *      description: Join a voice channel for a specific guild
+ *      tags:
+ *          - Music
+ *      parameters:
+ *          - in: path
+ *            name: guildID
+ *            schema:
+ *              type: string
+ *            required: true
+ *          - in: path
+ *            name: channelID
+ *            schema:
+ *              type: string
+ *            required: true
+ *      responses:
+ *         '200':
+ *           description: Successfull request
+ *         '400':
+ *           description: Bad Request
+ *         '401':
+ *           description: Unauthorized
+ *         '500':
+ *           description: Internal servor error
+ */
+router.post('/join/:guildID/:channelID', bot, async(req, res) => {
+    const { guildID, channelID } = req.params;
+    if (!guildID) res.status(400).send({ error: "Missing guildID" });
+    if (!channelID) res.status(400).send({ error: "Missing channelID" });
+    try {
+        const voiceChannel = res.ShewenyClient.guilds.cache.get(guildID).channels.cache.get(channelID);
+        if (!voiceChannel) return res.status(400).send({ error: "Channel not found, wrong guildID or channelID" });
+        if (!(voiceChannel instanceof VoiceChannel)) return res.status(400).send({ error: "Channel is not a voice channel" });
+        const queue = await res.ShewenyClient.player.createQueue(guildID);
+        queue.setData({ isAPICall: true });
+        await queue.join(voiceChannel);
+        res.status(200).send({ message: `Joined channel : ${voiceChannel.name}` });
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+})
+
+/**
+ * @swagger
+ * /discord/music/leave/{guildID}/{channelID}:
+ *   post:
+ *      description: Leave a voice channel for a specific guild
+ *      tags:
+ *          - Music
+ *      parameters:
+ *          - in: path
+ *            name: guildID
+ *            schema:
+ *              type: string
+ *            required: true
+ *          - in: path
+ *            name: channelID
+ *            schema:
+ *              type: string
+ *            required: true
+ *      responses:
+ *         '200':
+ *           description: Successfull request
+ *         '400':
+ *           description: Bad Request
+ *         '401':
+ *           description: Unauthorized
+ *         '500':
+ *           description: Internal servor error
+ */
+router.post('/leave/:guildID/:channelID', bot, async(req, res) => {
+    const { guildID, channelID } = req.params;
+    if (!guildID) res.status(400).send({ error: "Missing guildID" });
+    if (!channelID) res.status(400).send({ error: "Missing channelID" });
+    try {
+        const voiceChannel = res.ShewenyClient.guilds.cache.get(guildID).channels.cache.get(channelID);
+        if (!voiceChannel) return res.status(400).send({ error: "Channel not found, wrong guildID or channelID" });
+        if (!(voiceChannel instanceof VoiceChannel)) return res.status(400).send({ error: "Channel is not a voice channel" });
+        const queue = await res.ShewenyClient.player.getQueue(guildID);
+        if (!queue) return res.status(400).send({ error: "No queue found for this guild" });
+        await queue.leave();
+        res.status(200).send({ message: `Leaving channel : ${voiceChannel.name}` });
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+})
 
 /**
  * @swagger
@@ -44,6 +131,7 @@ const app = require('express')();
  *           description: Internal servor error
  */
 router.post('/play/:guildID/:channelID', bot, async(req, res) => {
+    let queue;
     const { guildID, channelID } = req.params;
     if (!guildID) res.status(400).send({ error: "Missing guildID" });
     if (!channelID) res.status(400).send({ error: "Missing channelID" });
@@ -52,13 +140,51 @@ router.post('/play/:guildID/:channelID', bot, async(req, res) => {
         const voiceChannel = res.ShewenyClient.guilds.cache.get(guildID).channels.cache.get(channelID);
         if (!voiceChannel) res.status(400).send({ error: "Channel not found, wrong guildID or channelID" });
         if (!(voiceChannel instanceof VoiceChannel)) res.status(400).send({ error: "Channel is not a voice channel" });
-
-        const queue = await res.ShewenyClient.player.createQueue(guildID);
-        queue.setData({ isAPICall: true });
+        const existingQueue = await res.ShewenyClient.player.getQueue(guildID);
+        if (existingQueue) queue = existingQueue;
+        if (!existingQueue) queue = await res.ShewenyClient.player.createQueue(guildID);
+        queue.data = { isAPICall: true, voiceChannel: voiceChannel, override: queue.data?.override ? queue.data.override : false };
         await queue.join(voiceChannel);
         await queue.play(req.body.searchOrURL).then(song => {
             res.status(200).send({ message: `Playing ${song.name}` });
         });
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+})
+
+/**
+ * @swagger
+ * /discord/music/volume/{guildID}:
+ *   get:
+ *      description: Get the volume of the bot in a specific guild
+ *      tags:
+ *          - Music
+ *      parameters:
+ *          - in: path
+ *            name: guildID
+ *            schema:
+ *              type: string
+ *            required: true
+ *      responses:
+ *         '200':
+ *           description: Successfull request
+ *         '400':
+ *           description: Bad Request
+ *         '401':
+ *           description: Unauthorized
+ *         '500':
+ *           description: Internal servor error
+ */
+router.get('/volume/:guildID', bot, async(req, res) => {
+    const { guildID } = req.params;
+    if (!guildID) res.status(400).send({ error: "Missing guildID" });
+    try {
+        const guild = res.ShewenyClient.guilds.cache.get(guildID);
+        if (!guild) res.status(400).send({ error: "Guild not found in the bot joined guilds or wrong guild id" });
+        const queue = await res.ShewenyClient.player.getQueue(guildID);
+        if (!queue) return res.status(400).send({ error: "No music currently playing in this guild" });
+        res.status(200).send({ volume: queue.volume });
     } catch (error) {
         res.status(500).send({ error: error.message });
     }
@@ -111,6 +237,42 @@ router.patch('/volume/:guildID/:volume', bot, async(req, res) => {
             queue.setVolume(volume);
             return res.status(200).send({ message: `The volume has been decreased to ${volume}%.` });
         }
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+})
+
+/**
+ * @swagger
+ * /discord/music/control/override/{guildID}:
+ *   patch:
+ *      description: Block the music control from the discord channels
+ *      tags:
+ *          - Music
+ *      parameters:
+ *          - in: path
+ *            name: guildID
+ *            schema:
+ *              type: string
+ *            required: true
+ *      responses:
+ *         '200':
+ *           description: Successfull request
+ *         '400':
+ *           description: Bad Request
+ *         '401':
+ *           description: Unauthorized
+ *         '500':
+ *           description: Internal servor error
+ */
+router.patch('/control/override/:guildID', bot, async(req, res) => {
+    let { guildID } = req.params;
+    if (!guildID) res.status(400).send({ error: "Missing guildID" });
+    try {
+        const queue = await res.ShewenyClient.player.getQueue(guildID);
+        if (!queue) return res.status(400).send({ error: "Can't override controls of an empty queue" });
+        await queue.setData({ isAPICall: true, voiceChannel: queue.data.voiceChannel, override: !queue.data.override });
+        res.status(200).send({ message: "Successfully overrided the music controls" });
     } catch (error) {
         res.status(500).send({ error: error.message });
     }

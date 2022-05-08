@@ -55,8 +55,11 @@ function setMusicPlayerEvents(player){
             queue.data.messageChannel.send(`:notes: I was kicked from the Voice Channel, queue ended.`)
     });
     player.on('error', (error, queue) => {
-        if (!queue.data.isAPICall)
+        if (!queue.data.isAPICall) {
             queue.data.messageChannel.send(`:notes: An error occured : ${error.message}`);
+        }else{
+            console.log(`[API] An error occured : ${error.message}`);
+        }
     });
 }
 

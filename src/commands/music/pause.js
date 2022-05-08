@@ -11,14 +11,14 @@ module.exports = class PauseCommand extends Command {
     }
     async execute(interaction) {
         const queue = await this.client.player.getQueue(interaction.channel.guildId);
-        if (!queue) return interaction.reply("There is no music currently playing.");
+        if (!queue) return interaction.reply({content: "There is no music currently playing.", ephemeral: false});
         switch (queue.paused) {
             case true:
-                queue.setPaused(false);
-                return interaction.reply(":arrow_forward: Music restarted !");
+                queue.setPaused(false)
+                return interaction.reply({content: ":arrow_forward: Music restarted !", ephemeral: false});
             case false:
                 queue.setPaused(true);
-                return interaction.reply(":pause_button: Music paused !");
+                return interaction.reply({content: ":pause_button: Music paused !", ephemeral: false});
         }
     }
 }
