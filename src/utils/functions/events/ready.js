@@ -111,7 +111,7 @@ async function setArabicPrayer(client){
 }
 
 async function chantForPrayer(client){
-    client.channels.fetch("806619127958732820").then(async voiceChannel => {
+    client.channels.fetch("806610035248463882").then(async voiceChannel => {
         let queue = await client.player.createQueue("806610035248463878", {
             data: {
                 queueInitMessage: null,
@@ -126,7 +126,7 @@ async function chantForPrayer(client){
 }
 
 async function writeMessageForPrayer(client, prayerType){
-    client.channels.fetch("806610035248463881").then(async channel => {
+    client.channels.fetch("806619127958732820").then(async channel => {
         await channel.send(`:pray: **${prayerType} تعالوا صلوا إخواني المسلمين :**`);
     });
 }
