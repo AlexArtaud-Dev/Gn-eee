@@ -18,7 +18,6 @@ module.exports = class ReadyEvent extends Event {
     console.log("════════════════════════════════════════════");
     // displayBotInfos(this.client);
     setMusicPlayerEvents(this.client.player);
-    setArabicPrayer(this.client);
   }
 
 };

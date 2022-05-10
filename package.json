@@ -19,7 +19,6 @@
     "https": "^1.0.0",
     "moment": "^2.29.3",
     "open": "^8.4.0",
-    "salahtimes": "^1.1.15",
     "sheweny": "^3.0.0",
     "swagger-jsdoc": "^6.2.1",
     "swagger-ui-express": "^4.3.0",

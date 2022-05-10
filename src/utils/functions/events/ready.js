@@ -1,6 +1,5 @@
 const {MessageEmbed} = require("discord.js");
 const moment = require("moment");
-const {getFajrDateTimeUtc, getDhuhrDateTimeUtc, getAsrDateTimeUtc, getMaghribDateTimeUtc, getIshaaDateTimeUtc} = require("salahtimes");
 
 function displayBotInfos (client) {
     let information = getBotInformations(client);
@@ -66,71 +65,6 @@ function setMusicPlayerEvents(player){
     });
 }
 
-async function setArabicPrayer(client){
-    let Fajr = getFajrDateTimeUtc(new Date(), 48.856614, 2.3522219);
-    let Dhur = getDhuhrDateTimeUtc(new Date(), 48.856614);
-    let Asr = getAsrDateTimeUtc(new Date(), 48.856614, 2.3522219);
-    let Maghrib = getMaghribDateTimeUtc(new Date(), 48.856614, 2.3522219);
-    let Isha = getIshaaDateTimeUtc(new Date(), 48.856614, 2.3522219);
-    let currentTime = new Date();
-    let diffFajr = new Date(Fajr).getTime() - currentTime.getTime();
-    let diffDhur = new Date(Dhur).getTime() - currentTime.getTime();
-    let diffAsr = new Date(Asr).getTime() - currentTime.getTime();
-    let diffMaghrib = new Date(Maghrib).getTime() - currentTime.getTime();
-    let diffIsha = new Date(Isha).getTime() - currentTime.getTime();
-    if (diffFajr >= 0) {
-        setTimeout(() => {
-            chantForPrayer(client);
-            writeMessageForPrayer(client, "Fajr");
-        }, diffFajr);
-    }
-    if (diffDhur >= 0) {
-        setTimeout(() => {
-            chantForPrayer(client);
-            writeMessageForPrayer(client, "Dhur");
-        }, diffDhur);
-    }
-    if (diffMaghrib >= 0) {
-        setTimeout(() => {
-            chantForPrayer(client);
-            writeMessageForPrayer(client, "Maghrib");
-        }, diffMaghrib);
-    }
-    if (diffAsr >= 0) {
-        setTimeout(() => {
-            chantForPrayer(client);
-            writeMessageForPrayer(client, "Asr");
-        }, diffAsr);
-    }
-    if (diffIsha >= 0) {
-        setTimeout(() => {
-            chantForPrayer(client);
-            writeMessageForPrayer(client, "Isha");
-        }, diffIsha);
-    }
-}
-
-async function chantForPrayer(client){
-    client.channels.fetch("806610035248463882").then(async voiceChannel => {
-        let queue = await client.player.createQueue("806610035248463878", {
-            data: {
-                queueInitMessage: null,
-                voiceChannel: voiceChannel,
-                isAPICall: true,
-                override: false,
-            }
-        });
-        await queue.join(voiceChannel);
-        await queue.play("https://www.youtube.com/watch?v=yjhf8EnUFSI");
-    });
-}
-
-async function writeMessageForPrayer(client, prayerType){
-    client.channels.fetch("806619127958732820").then(async channel => {
-        await channel.send(`:pray: **${prayerType} تعالوا صلوا إخواني المسلمين :**`);
-    });
-}
-
 function getPlaylistEmbed(playlist, author){
     let playlistEmbed = new MessageEmbed();
     playlistEmbed.setTitle(playlist.name)
@@ -174,7 +108,6 @@ function getPlaylistDuration(playlist){
 
 module.exports = {
     displayBotInfos,
-    setArabicPrayer,
     getBotInformations,
     setMusicPlayerEvents
 }
