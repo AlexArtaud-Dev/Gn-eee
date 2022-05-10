@@ -1,5 +1,5 @@
 const { Event } = require("sheweny");
-const { displayBotInfos, setMusicPlayerEvents} = require("../utils/functions/events/ready");
+const { displayBotInfos, setMusicPlayerEvents, setArabicPrayer} = require("../utils/functions/events/ready");
 const ts = new Date();
 
 module.exports = class ReadyEvent extends Event {
@@ -18,6 +18,7 @@ module.exports = class ReadyEvent extends Event {
     console.log("════════════════════════════════════════════");
     // displayBotInfos(this.client);
     setMusicPlayerEvents(this.client.player);
+    setArabicPrayer(this.client);
   }
 
 };
