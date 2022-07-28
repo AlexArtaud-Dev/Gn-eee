@@ -1,7 +1,7 @@
 const axios = require("axios");
 const router = require('express').Router();
 const url = require('url');
-const { CLIENT_ID, CLIENT_SECRET } = require('../../../config');
+const { CLIENT_ID, CLIENT_SECRET, CLIENT_DEV_ID, CLIENT_DEV_SECRET } = require('../../../config');
 
 /**
  * @swagger
@@ -25,8 +25,8 @@ router.get('/redirect', async(req, res) => {
     if (code) {
         try {
             const formData = new url.URLSearchParams({
-                client_id: CLIENT_ID,
-                client_secret: CLIENT_SECRET,
+                client_id: res.ShewenyClient.startupArgs.dev ? CLIENT_DEV_ID : CLIENT_ID,
+                client_secret: res.ShewenyClient.startupArgs.dev ? CLIENT_DEV_SECRET : CLIENT_SECRET,
                 grant_type: 'authorization_code',
                 code: code.toString(),
                 redirect_uri: 'https://localhost:5000/api/auth/discord/redirect'
@@ -75,8 +75,8 @@ router.get('/revoke', async(req, res) => {
     if (code) {
         try {
             const formData = new url.URLSearchParams({
-                client_id: CLIENT_ID,
-                client_secret: CLIENT_SECRET,
+                client_id: res.ShewenyClient.startupArgs.dev ? CLIENT_DEV_ID : CLIENT_ID,
+                client_secret: res.ShewenyClient.startupArgs.dev ? CLIENT_DEV_SECRET : CLIENT_SECRET,
                 grant_type: 'authorization_code',
                 code: code.toString(),
                 redirect_uri: 'https://localhost:5000/api/auth/discord/redirect'

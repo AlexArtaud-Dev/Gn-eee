@@ -2,6 +2,7 @@ const { ShewenyClient } = require("sheweny");
 const { API } = require("./API/api");
 const { Player } = require("discord-music-player");
 const config = require("../config");
+const argv = require('minimist')(process.argv.slice(2));
 
 const client = new ShewenyClient({
   intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_VOICE_STATES"],
@@ -32,7 +33,10 @@ const client = new ShewenyClient({
 client.player = new Player(client, {
   leaveOnEmpty: false,
 });
-client.login(config.DISCORD_TOKEN);
+
+client.startupArgs = argv;
+
+client.login(client.startupArgs.dev ? config.DISCORD_DEV_TOKEN : config.DISCORD_TOKEN);
 
 API(client);
 

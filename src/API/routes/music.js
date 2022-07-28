@@ -1,6 +1,7 @@
 const bot = require("./middlewares/bot");
 const {VoiceChannel} = require("discord.js");
 const {isVolumeInvalid} = require("./utils");
+const {paginate} = require("../../utils/functions/other/array");
 const router = require('express').Router();
 
 /**
@@ -148,6 +149,65 @@ router.post('/play/:guildID/:channelID', bot, async(req, res) => {
         await queue.play(req.body.searchOrURL).then(song => {
             res.status(200).send({ message: `Playing ${song.name}` });
         });
+    } catch (error) {
+        res.status(500).send({ error: error.message });
+    }
+})
+
+/**
+ * @swagger
+ * /discord/music/queue/{guildID}:
+ *   get:
+ *      description: Get the current queue of the guild
+ *      tags:
+ *          - Music
+ *      parameters:
+ *          - in: path
+ *            name: guildID
+ *            schema:
+ *              type: string
+ *            required: true
+ *          - in: query
+ *            name: pagination
+ *            schema:
+ *              type: number
+ *            required: false
+ *          - in: query
+ *            name: page
+ *            schema:
+ *              type: number
+ *            required: false
+ *      responses:
+ *         '200':
+ *           description: Successfull request
+ *         '400':
+ *           description: Bad Request
+ *         '401':
+ *           description: Unauthorized
+ *         '500':
+ *           description: Internal servor error
+ */
+router.get('/queue/:guildID', bot, async(req, res) => {
+    const { guildID } = req.params;
+    const { pagination, page } = req.query;
+    if (!guildID) res.status(400).send({ error: "Missing guildID" });
+    try {
+        let songs = [];
+        const guild = res.ShewenyClient.guilds.cache.get(guildID);
+        if (!guild) res.status(400).send({ error: "Guild not found in the bot joined guilds or wrong guild id" });
+        const queue = await res.ShewenyClient.player.getQueue(guildID);
+        if (!queue) return res.status(400).send({ error: "No music currently playing in this guild" });
+        queue.songs.forEach(song => {
+            songs.push({
+                name: song.name,
+                author: song.author,
+                url: song.url,
+                thumbnail: song.thumbnail,
+                duration: song.duration
+            })
+        })
+        if (pagination && page) res.status(200).send(paginate(songs, pagination, page));
+        else res.status(200).send(songs);
     } catch (error) {
         res.status(500).send({ error: error.message });
     }

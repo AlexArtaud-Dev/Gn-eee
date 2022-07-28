@@ -8,11 +8,23 @@ const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerUI = require("swagger-ui-express")
 const swaggerOptions = require("./utils/swaggerOptions");
 const { API_PORT } = require("../../config");
-const serverKey = fs.readFileSync("./src/API/ssl_cert/server.key")
-const serverCert = fs.readFileSync("./src/API/ssl_cert/server.cert")
+
 
 
 function API(ShewenyClient) {
+    let API_CONFIG = null;
+    if (ShewenyClient.startupArgs.dev){
+        API_CONFIG = {
+            key: fs.readFileSync("./src/API/ssl_cert/server.key"),
+            cert: fs.readFileSync("./src/API/ssl_cert/server.cert")
+        }
+    }else {
+        API_CONFIG = {
+            key: fs.readFileSync('/etc/letsencrypt/live/manganimes-api.westeurope.cloudapp.azure.com/privkey.pem', 'utf8'),
+            cert: fs.readFileSync('/etc/letsencrypt/live/manganimes-api.westeurope.cloudapp.azure.com/cert.pem', 'utf8'),
+            ca: fs.readFileSync('/etc/letsencrypt/live/manganimes-api.westeurope.cloudapp.azure.com/chain.pem', 'utf8')
+        }
+    }
 
     const app = express();
     app.use(function(req, res, next) {
@@ -40,10 +52,9 @@ function API(ShewenyClient) {
     app.use('/api/discord/music', music);
 
     // Server Listening
-    https.createServer({
-        key: serverKey,
-        cert: serverCert
-    }, app)
+
+
+    https.createServer(API_CONFIG , app)
       .listen(API_PORT, function () {
           console.clear();
           console.log(`${ts.toLocaleString()} - App listening on port ${API_PORT}! Go to https://localhost:${API_PORT}/v1/swagger`)

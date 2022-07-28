@@ -10,7 +10,6 @@ module.exports = class MusicWebServiceInhibitor extends Inhibitor {
   }
 
   async execute(client, interaction) {
-      console.log("Music inhibitor triggered");
       const commandName = interaction.command.name;
       if (!commandName) return true;
       const queue = client.player.getQueue(interaction.guild.id);
