@@ -21,6 +21,7 @@
     "https": "^1.0.0",
     "minimist": "^1.2.6",
     "moment": "^2.29.3",
+    "mongoose": "^6.5.0",
     "open": "^8.4.0",
     "sheweny": "^3.0.0",
     "swagger-jsdoc": "^6.2.1",

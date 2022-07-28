@@ -13,9 +13,9 @@ module.exports = class ReadyEvent extends Event {
 
   execute() {
     this.client.user.setPresence({ activities: [{name: "LE NÉANT", type: "WATCHING"}], status:"dnd"});
-    console.log("════════════════════════════════════════════");
+    console.log("══════════════════════════════════════════════");
     console.log(` ${ts.toLocaleString()} - ${this.client.user.tag} started!`);
-    console.log("════════════════════════════════════════════");
+    console.log("══════════════════════════════════════════════");
     // displayBotInfos(this.client);
     setMusicPlayerEvents(this.client.player);
   }

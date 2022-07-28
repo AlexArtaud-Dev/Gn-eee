@@ -52,14 +52,17 @@ function API(ShewenyClient) {
     app.use('/api/discord/music', music);
 
     // Server Listening
-
-
-    https.createServer(API_CONFIG , app)
-      .listen(API_PORT, function () {
-          console.clear();
-          console.log(`${ts.toLocaleString()} - App listening on port ${API_PORT}! Go to https://localhost:${API_PORT}/v1/swagger`)
-          // open(`https://localhost:${API_PORT}/v1/swagger`, {app: 'firefox'});
-      })
+    try {
+        https.createServer(API_CONFIG , app)
+          .listen(API_PORT, function () {
+              console.clear();
+              console.log(`${ts.toLocaleString()} - App listening on port ${API_PORT}! Go to https://localhost:${API_PORT}/v1/swagger`)
+              // open(`https://localhost:${API_PORT}/v1/swagger`, {app: 'firefox'});
+          })
+    }catch (error) {
+        console.log(`${ts.toLocaleString()} - Error starting API: ${error}`);
+        process.exit(1);
+    }
 }
 
 module.exports = {
