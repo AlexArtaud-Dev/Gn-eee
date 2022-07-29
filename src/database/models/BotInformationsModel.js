@@ -19,6 +19,10 @@ const botInformationSchema = new mongoose.Schema({
         type: String,
         default: 'en',
         required: true
+    },
+    appVersion: {
+        type: String,
+        default: '1.0.0',
     }
 })
 

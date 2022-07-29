@@ -2,7 +2,7 @@ const { ShewenyClient } = require("sheweny");
 const { API } = require("./API/api");
 const { Player } = require("discord-music-player");
 const config = require("../config");
-const connect = require("./database/database");
+const { connect } = require("./database/database");
 const argv = require('minimist')(process.argv.slice(2));
 const ts = new Date();
 
