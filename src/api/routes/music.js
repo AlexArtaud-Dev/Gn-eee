@@ -1,4 +1,4 @@
-const bot = require("./middlewares/bot");
+const bot = require("../middlewares/bot");
 const {VoiceChannel} = require("discord.js");
 const {isVolumeInvalid} = require("./utils");
 const {paginate} = require("../../utils/functions/other/array");

@@ -4,7 +4,7 @@ let inhibitorMessage = "";
 module.exports = class MusicWebServiceInhibitor extends Inhibitor {
   constructor(client) {
     super(client, "webServiceMusic", {
-      type: ["ALL"],
+      type: ["MESSAGE_COMMAND", "APPLICATION_COMMAND"],
       priority: 10,
     });
   }

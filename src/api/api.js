@@ -6,17 +6,15 @@ const https = require("https");
 const express = require("express");
 const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerUI = require("swagger-ui-express")
-const swaggerOptions = require("./utils/swaggerOptions");
+const swaggerOptions = require("./configuration/swaggerOptions");
 const { API_PORT } = require("../../config");
-
-
 
 function API(ShewenyClient) {
     let API_CONFIG = null;
     if (ShewenyClient.startupArgs.dev){
         API_CONFIG = {
-            key: fs.readFileSync("./src/API/ssl_cert/server.key"),
-            cert: fs.readFileSync("./src/API/ssl_cert/server.cert")
+            key: fs.readFileSync("./src/api/ssl_cert/server.key"),
+            cert: fs.readFileSync("./src/api/ssl_cert/server.cert")
         }
     }else {
         API_CONFIG = {

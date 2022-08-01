@@ -10,20 +10,21 @@
     "nodemon-prod": "nodemon ./src/index.js"
   },
   "dependencies": {
+    "@consumet/extensions": "^1.0.7",
     "@discordjs/opus": "^0.5.3",
     "@discordjs/voice": "*",
     "axios": "^0.27.2",
     "canvas": "^2.9.0",
     "cors": "^2.8.5",
     "discord-music-player": "^8.3.2",
-    "discord.js": "^13.0.0",
+    "discord.js": "^13.9.2",
     "express": "^4.18.1",
     "https": "^1.0.0",
     "minimist": "^1.2.6",
     "moment": "^2.29.3",
     "mongoose": "^6.5.0",
     "open": "^8.4.0",
-    "sheweny": "^3.0.0",
+    "sheweny": "^3.4.3",
     "swagger-jsdoc": "^6.2.1",
     "swagger-ui-express": "^4.3.0",
     "ts": "^0.2.2"

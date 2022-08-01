@@ -1,5 +1,5 @@
 const { ShewenyClient } = require("sheweny");
-const { API } = require("./API/api");
+const { API } = require("./api/api");
 const { Player } = require("discord-music-player");
 const config = require("../config");
 const { connect } = require("./database/database");
@@ -7,7 +7,8 @@ const argv = require('minimist')(process.argv.slice(2));
 const ts = new Date();
 
 const client = new ShewenyClient({
-  intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_VOICE_STATES"],
+  intents: ["GUILDS", "GUILD_MEMBERS", "GUILD_MESSAGES"],
+  partials: ["GUILD_MEMBER"],
   admins: ["259741670323650571"],
   managers: {
     commands: {

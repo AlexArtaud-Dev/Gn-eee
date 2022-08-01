@@ -1,9 +1,7 @@
-const bot = require("./middlewares/bot");
+const bot = require("../middlewares/bot");
 const axios = require("axios");
 const {DISCORD_API_BASE_URL} = require("../../../config");
-const {Channel, VoiceChannel} = require("discord.js");
 const router = require('express').Router();
-const app = require('express')();
 
 /**
  * @swagger

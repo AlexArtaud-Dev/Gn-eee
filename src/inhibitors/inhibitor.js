@@ -3,7 +3,7 @@ const { Inhibitor } = require("sheweny");
 module.exports = class BlackListInhibitor extends Inhibitor {
   constructor(client) {
     super(client, "blacklist", {
-      type: ["ALL"],
+      type: ["MESSAGE_COMMAND", "APPLICATION_COMMAND"],
     });
   }
 
