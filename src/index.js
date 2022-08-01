@@ -3,11 +3,12 @@ const { API } = require("./api/api");
 const { Player } = require("discord-music-player");
 const config = require("../config");
 const { connect } = require("./database/database");
+const {generateDependencyReport} = require("@discordjs/voice");
 const argv = require('minimist')(process.argv.slice(2));
 const ts = new Date();
 
 const client = new ShewenyClient({
-  intents: ["GUILDS", "GUILD_MEMBERS", "GUILD_MESSAGES"],
+  intents: ["GUILDS", "GUILD_MEMBERS", "GUILD_MESSAGES", "GUILD_VOICE_STATES"],
   partials: ["GUILD_MEMBER"],
   admins: ["259741670323650571"],
   managers: {
@@ -35,14 +36,9 @@ const client = new ShewenyClient({
 
 client.startupArgs = argv;
 
-try{
-  client.player = new Player(client, {
-    leaveOnEmpty: false,
-  });
-}catch (error) {
-    console.log(`${ts.toLocaleString()} - Error initializing starting music player : ${error}`);
-    process.exit(1);
-}
+client.player = new Player(client, {
+  leaveOnEmpty: false,
+});
 
 connect(client);
 
