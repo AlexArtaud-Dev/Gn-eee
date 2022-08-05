@@ -5,6 +5,10 @@ module.exports = class DeleteInteractionButton extends Button {
         super(client, ["deleteInteractionButton"]);
     }
 
+    async before(interaction) {
+        console.log("Before DeleteInteractionButton");
+    }
+
     async execute(interaction) {
         if (interaction) await interaction.message.delete();
     }

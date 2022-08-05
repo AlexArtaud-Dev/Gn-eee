@@ -17,6 +17,7 @@ module.exports = class BotActivationInhibitor extends Inhibitor {
     }
 
     async onFailure(client, interaction) {
+        console.log("BotActivationInhibitor onFailure");
         await interaction.reply({content: "This bot was disabled by an administrator. Contact the administrator for more information.", ephemeral: true});
     }
 };

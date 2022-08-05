@@ -10,6 +10,7 @@ module.exports = class MusicInhibitor extends Inhibitor {
   }
 
   async execute(client, interaction) {
+    if (interaction.type !== "APPLICATION_COMMAND") return true;
     const commandName = interaction.command.name;
     if (!commandName) return true;
     const musicCommands = Array.from(this.client.managers.commands.commands.filter((command) => command.category === "Music").keys());
